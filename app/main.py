@@ -5,34 +5,29 @@ import numpy as np
 
 from app.schema import StudentInput
 
-# Create FastAPI app
 app = FastAPI(
     title="Student Performance Prediction API",
     description="Predict student performance using Machine Learning",
     version="1.0"
 )
 
-# Enable CORS (IMPORTANT for frontend)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # allow frontend requests
+    allow_origins=["*"],   
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Load trained ML model (load ONCE)
 try:
     model = joblib.load("model/student_model.pkl")
 except Exception:
     raise RuntimeError("Model not found. Train the model first.")
 
-# Root endpoint
 @app.get("/")
 def home():
     return {"message": "Student Performance Prediction API is running"}
 
-# Prediction endpoint
 @app.post("/predict")
 def predict_performance(data: StudentInput):
     try:
